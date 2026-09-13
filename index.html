@@ -23,7 +23,7 @@
       radial-gradient(ellipse 60% 40% at 15% 0%, rgba(232,147,90,0.14), transparent 60%),
       radial-gradient(ellipse 50% 40% at 100% 30%, rgba(143,174,114,0.10), transparent 60%);
   }
-  .wrap{max-width:640px; margin:0 auto; padding:0 22px;}
+  .wrap{max-width:clamp(340px, 88vw, 880px); margin:0 auto; padding:0 clamp(18px,3vw,32px);}
   h1,h2,h3{font-family:'Fraunces',serif;}
   em{font-style:italic; color:var(--ember);}
 
@@ -41,6 +41,21 @@
     animation:flicker 3.2s ease-in-out infinite;
   }
   @keyframes flicker{0%,100%{box-shadow:0 0 14px rgba(232,147,90,0.35);} 50%{box-shadow:0 0 22px rgba(232,147,90,0.6);}}
+
+  /* ── Sticky section navigation with sliding indicator ── */
+  .site-nav{
+    position:sticky; top:0; z-index:20; margin-bottom:8px;
+    background:rgba(14,19,12,0.72); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line); border-radius:16px;
+  }
+  .nav-track{display:flex; flex-wrap:wrap; gap:4px; padding:6px; justify-content:center;}
+  .nav-link{
+    display:inline-flex; align-items:center; gap:6px;
+    text-decoration:none; color:var(--dim);
+    font-size:clamp(0.82rem,1.1vw,0.92rem); font-weight:500; padding:0.55rem 0.85rem; border-radius:11px;
+    transition:color 0.22s, background 0.22s; white-space:nowrap;
+  }
+  .nav-link:hover{color:var(--cream); background:var(--card-soft);}
 
   /* ── HERO: asymmetric, organic glow, oversized type ── */
   .hero{padding:34px 0 50px; position:relative;}
@@ -63,16 +78,18 @@
   }
   .btn-ember{background:linear-gradient(135deg,var(--ember),#f0a56e); color:#241408; box-shadow:0 10px 26px rgba(232,147,90,0.28);}
   .btn-ember:hover{transform:translateY(-3px); box-shadow:0 14px 32px rgba(232,147,90,0.42);}
+  .btn-ember:active{transform:scale(0.97);}
   .btn-outline{border-color:var(--line); color:var(--cream);}
   .btn-outline:hover{border-color:var(--sage); color:var(--sage); transform:translateY(-3px);}
+  .btn-outline:active{transform:scale(0.97);}
 
-  section{padding:44px 0; position:relative;}
+  section{padding:clamp(38px,5vw,58px) 0; position:relative;}
   .divider{height:26px; display:flex; align-items:center; justify-content:center;}
   .divider svg{opacity:0.5;}
 
   .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; gap:12px;}
   .section-head .kicker{color:var(--ember); font-size:0.82rem; font-weight:600;}
-  .section-head h2{font-size:1.6rem; font-weight:700;}
+  .section-head h2{font-size:clamp(1.5rem,2vw,2rem); font-weight:700;}
 
   /* ── MENU: ticket-style rows, slight organic rotation ── */
   .menu-group{margin-bottom:30px;}
@@ -149,6 +166,37 @@
   .demo-banner p{color:var(--faint); font-size:0.9rem; margin-top:6px;}
 
   footer{text-align:center; padding:30px 0; color:var(--faint); font-size:0.85rem; border-top:1px solid var(--line);}
+
+  /* ── Floating order button ── */
+  .order-fab{
+    position:fixed; right:clamp(16px,4vw,32px); bottom:clamp(16px,4vw,32px); z-index:15;
+    display:flex; align-items:center; gap:8px; text-decoration:none;
+    background:linear-gradient(135deg,var(--ember),#f0a56e); color:#241408; font-weight:700; font-size:0.94rem;
+    padding:0.9rem 1.3rem; border-radius:50px; box-shadow:0 10px 28px rgba(232,147,90,0.35);
+    transition:transform 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.25s;
+  }
+  .order-fab:hover{transform:translateY(-3px); box-shadow:0 14px 34px rgba(232,147,90,0.5);}
+  .order-fab:active{transform:scale(0.96);}
+
+  /* ── Popularity tag ── */
+  .ticket{position:relative;}
+  .popular-badge{
+    background:linear-gradient(135deg,var(--sage),#b6d29a); color:#132009; font-size:0.68rem; font-weight:700;
+    padding:2px 8px; border-radius:20px; margin-left:8px; white-space:nowrap;
+  }
+
+  /* ── Open/closed status badge ── */
+  .status-badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:600;
+    padding:3px 10px; border-radius:20px; margin-left:8px;
+  }
+  .status-badge.open{background:rgba(143,174,114,0.18); color:var(--sage);}
+  .status-badge.closed{background:rgba(232,147,90,0.15); color:var(--ember);}
+  .status-dot{width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  /* ── Scroll reveal ── */
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity 0.6s ease, transform 0.6s ease;}
+  .reveal.in-view{opacity:1; transform:none;}
 </style>
 </head>
 <body>
@@ -157,6 +205,16 @@
   <header>
     <div class="brand"><span class="flame">🔥</span> Кафе</div>
   </header>
+
+  <nav class="site-nav">
+    <div class="nav-track" id="navTrack">
+      <a href="#menu" class="nav-link" data-target="menu">🍽️ Меню</a>
+      <a href="#delivery" class="nav-link" data-target="delivery">🚚 Доставка</a>
+      <a href="#kitchen" class="nav-link" data-target="kitchen">👩‍🍳 Кухня</a>
+      <a href="#contacts" class="nav-link" data-target="contacts">📍 Контакты</a>
+      <a href="#faq" class="nav-link" data-target="faq">💬 Вопросы</a>
+    </div>
+  </nav>
 
   <section class="hero">
     <div class="hero-glow"></div>
@@ -172,28 +230,28 @@
   <section id="menu">
     <div class="section-head"><div><span class="kicker">Меню</span><h2>Что готовим</h2></div></div>
 
-    <div class="menu-group">
+    <div class="menu-group reveal">
       <span class="stamp">Супы</span>
       <div class="ticket"><div class="info"><strong>Борщ</strong><span>со сметаной и зеленью</span></div><div class="price">1 200 тг</div></div>
       <div class="ticket"><div class="info"><strong>Лагман</strong><span>острый, с говядиной</span></div><div class="price">1 500 тг</div></div>
     </div>
 
-    <div class="menu-group">
+    <div class="menu-group reveal">
       <span class="stamp">Основные блюда</span>
-      <div class="ticket"><div class="info"><strong>Плов</strong><span>с бараниной</span></div><div class="price">1 800 тг</div></div>
+      <div class="ticket"><div class="info"><strong>Плов <span class="popular-badge">Популярное</span></strong><span>с бараниной</span></div><div class="price">1 800 тг</div></div>
       <div class="ticket"><div class="info"><strong>Куриные котлеты</strong><span>с картофельным пюре</span></div><div class="price">1 600 тг</div></div>
     </div>
 
-    <div class="menu-group">
+    <div class="menu-group reveal">
       <span class="stamp">Выпечка</span>
       <div class="ticket"><div class="info"><strong>Самса</strong><span>с мясом, 1 шт</span></div><div class="price">400 тг</div></div>
       <div class="ticket"><div class="info"><strong>Баурсаки</strong><span>порция 10 шт</span></div><div class="price">900 тг</div></div>
     </div>
   </section>
 
-  <section>
+  <section id="delivery">
     <div class="section-head"><div><span class="kicker">Доставка</span><h2>Условия</h2></div></div>
-    <div class="receipt">
+    <div class="receipt reveal">
       <div class="receipt-row"><span>Время доставки</span><span>40–60 мин</span></div>
       <div class="receipt-row"><span>Мин. заказ</span><span>3 000 тг</span></div>
       <div class="receipt-row"><span>Бесплатно от</span><span>5 000 тг</span></div>
@@ -201,23 +259,23 @@
     </div>
   </section>
 
-  <section>
+  <section id="kitchen">
     <div class="section-head"><div><span class="kicker">Кухня</span><h2>Как мы готовим</h2></div></div>
-    <div class="honeycomb"><div class="hex">🍲</div><div class="hex">🥟</div><div class="hex">🍞</div></div>
+    <div class="honeycomb reveal"><div class="hex">🍲</div><div class="hex">🥟</div><div class="hex">🍞</div></div>
   </section>
 
-  <section>
+  <section id="contacts">
     <div class="section-head"><div><span class="kicker">Контакты</span><h2>Связаться</h2></div></div>
-    <div class="contact-card">
+    <div class="contact-card reveal">
       <div class="contact-row"><span class="ico">📍</span><div><strong>Адрес</strong>уточняется под ваш город</div></div>
-      <div class="contact-row"><span class="ico">🕙</span><div><strong>Часы работы</strong>Ежедневно 10:00 – 21:00</div></div>
+      <div class="contact-row"><span class="ico">🕙</span><div><strong>Часы работы</strong>Ежедневно 10:00 – 21:00 <span class="status-badge" id="statusBadge"><span class="status-dot"></span><span id="statusText">…</span></span></div></div>
       <div class="contact-row"><span class="ico">📞</span><div><strong>Телефон</strong>уточняется</div></div>
     </div>
   </section>
 
-  <section>
+  <section id="faq">
     <div class="section-head"><div><span class="kicker">Вопросы</span><h2>Часто спрашивают</h2></div></div>
-    <div class="chat" id="faqChat">
+    <div class="chat reveal" id="faqChat">
       <div class="bubble q" data-a="a1">Как оплатить заказ?</div>
       <div class="bubble a" id="a1">Наличными курьеру или переводом на карту — как вам удобно.</div>
       <div class="bubble q" data-a="a2">Можно ли заказать на завтра?</div>
@@ -228,7 +286,7 @@
   </section>
 
   <section>
-    <div class="demo-banner">
+    <div class="demo-banner reveal">
       <strong>Это демо-сайт</strong> — пример работы.
       <p>Хотите такой же для своего бизнеса? Напишите — соберём под ваш бренд и тематику.</p>
     </div>
@@ -237,12 +295,35 @@
   <footer>Кафе — демо-версия сайта</footer>
 </div>
 
+<a href="#" class="order-fab">🛵 Заказать</a>
+
 <script>
 document.querySelectorAll('.bubble.q').forEach(q => {
   q.addEventListener('click', () => {
     document.getElementById(q.getAttribute('data-a')).classList.toggle('open');
   });
 });
+
+// ── Scroll-reveal for content blocks ──
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Live open/closed status (10:00–21:00 daily) ──
+const hour = new Date().getHours();
+const isOpen = hour >= 10 && hour < 21;
+const badge = document.getElementById('statusBadge');
+const statusText = document.getElementById('statusText');
+if (badge && statusText) {
+  badge.classList.add(isOpen ? 'open' : 'closed');
+  statusText.textContent = isOpen ? 'Открыто сейчас' : 'Сейчас закрыто';
+}
 </script>
 
 </body>
