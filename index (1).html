@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кафе — домашняя кухня с доставкой</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e130c; --card:#171d13; --card-soft:#1e2617;
+    --line:#2a3320; --line-soft:#212a19;
+    --cream:#f3ede0; --dim:#8a9678; --faint:#5a6449;
+    --ember:#e8935a; --ember-soft:#c97a49; --ember-tint:#2a1d12;
+    --sage:#8fae72; --sage-tint:#1a2413;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--cream);
+    font-family:'Inter',sans-serif; line-height:1.6; overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 15% 0%, rgba(232,147,90,0.14), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 30%, rgba(143,174,114,0.10), transparent 60%);
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:0 22px;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  em{font-style:italic; color:var(--ember);}
+
+  /* grain texture overlay for tactile "kitchen" feel */
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{padding:22px 0; display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem;}
+  .brand .flame{
+    width:30px; height:30px; border-radius:50% 50% 50% 4px; background:linear-gradient(145deg,var(--ember),#f6b884);
+    display:flex; align-items:center; justify-content:center; font-size:0.9rem;
+    animation:flicker 3.2s ease-in-out infinite;
+  }
+  @keyframes flicker{0%,100%{box-shadow:0 0 14px rgba(232,147,90,0.35);} 50%{box-shadow:0 0 22px rgba(232,147,90,0.6);}}
+
+  /* ── HERO: asymmetric, organic glow, oversized type ── */
+  .hero{padding:34px 0 50px; position:relative;}
+  .hero-glow{
+    position:absolute; top:-40px; left:-60px; width:280px; height:280px; border-radius:50%;
+    background:radial-gradient(circle, rgba(232,147,90,0.18), transparent 70%); z-index:-1; filter:blur(10px);
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:7px; color:var(--ember); font-size:0.82rem; font-weight:600;
+    letter-spacing:0.3px; margin-bottom:16px;
+  }
+  .eyebrow::before{content:""; width:16px; height:1px; background:var(--ember);}
+  .hero h1{font-size:clamp(2.3rem,10vw,3.3rem); font-weight:800; line-height:1.06; letter-spacing:-1px; margin-bottom:16px;}
+  .hero p{color:var(--dim); font-size:1.05rem; max-width:380px; margin-bottom:30px;}
+  .cta-row{display:flex; gap:12px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:0.95rem 1.9rem;
+    border-radius:40px; font-weight:600; font-size:0.98rem; text-decoration:none;
+    cursor:pointer; transition:all 0.28s cubic-bezier(.4,0,.2,1); border:1.5px solid transparent;
+  }
+  .btn-ember{background:linear-gradient(135deg,var(--ember),#f0a56e); color:#241408; box-shadow:0 10px 26px rgba(232,147,90,0.28);}
+  .btn-ember:hover{transform:translateY(-3px); box-shadow:0 14px 32px rgba(232,147,90,0.42);}
+  .btn-outline{border-color:var(--line); color:var(--cream);}
+  .btn-outline:hover{border-color:var(--sage); color:var(--sage); transform:translateY(-3px);}
+
+  section{padding:44px 0; position:relative;}
+  .divider{height:26px; display:flex; align-items:center; justify-content:center;}
+  .divider svg{opacity:0.5;}
+
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; gap:12px;}
+  .section-head .kicker{color:var(--ember); font-size:0.82rem; font-weight:600;}
+  .section-head h2{font-size:1.6rem; font-weight:700;}
+
+  /* ── MENU: ticket-style rows, slight organic rotation ── */
+  .menu-group{margin-bottom:30px;}
+  .menu-group:last-child{margin-bottom:0;}
+  .stamp{
+    display:inline-block; background:var(--sage-tint); color:var(--sage); border:1px solid var(--sage);
+    font-size:0.78rem; font-weight:600; padding:3px 12px; border-radius:20px; margin-bottom:14px;
+    transform:rotate(-1.5deg);
+  }
+  .ticket{
+    display:flex; align-items:center; gap:14px; background:var(--card);
+    border:1px dashed var(--line); border-radius:10px; padding:14px 16px; margin-bottom:10px;
+    transition:all 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  .ticket:nth-child(even){transform:rotate(0.4deg);}
+  .ticket:nth-child(odd){transform:rotate(-0.4deg);}
+  .ticket:hover{transform:rotate(0deg) translateX(4px); border-color:var(--ember-soft); border-style:solid;}
+  .ticket:last-child{margin-bottom:0;}
+  .ticket .info{flex:1;}
+  .ticket .info strong{display:block; font-size:1rem; font-weight:600; margin-bottom:2px;}
+  .ticket .info span{color:var(--faint); font-size:0.85rem;}
+  .ticket .price{
+    font-family:'JetBrains Mono',monospace; font-weight:500; font-size:0.92rem;
+    background:var(--ember-tint); color:var(--ember); padding:6px 12px; border-radius:20px; white-space:nowrap;
+  }
+
+  /* ── DELIVERY: receipt card ── */
+  .receipt{
+    background:var(--card); border-radius:4px; padding:1.6rem 1.4rem; position:relative;
+    font-family:'JetBrains Mono',monospace;
+    background-image:repeating-linear-gradient(transparent, transparent 27px, rgba(255,255,255,0.02) 28px);
+  }
+  .receipt::before, .receipt::after{
+    content:""; position:absolute; left:0; right:0; height:10px;
+    background:radial-gradient(circle, var(--bg) 48%, transparent 50%) 0 0/16px 16px repeat-x;
+  }
+  .receipt::before{top:-5px;} .receipt::after{bottom:-5px; transform:rotate(180deg);}
+  .receipt-row{display:flex; justify-content:space-between; padding:9px 0; font-size:0.88rem; border-bottom:1px dashed var(--line);}
+  .receipt-row:last-child{border-bottom:none;}
+  .receipt-row span:first-child{color:var(--faint);}
+  .receipt-row span:last-child{color:var(--cream); font-weight:500;}
+
+  /* ── GALLERY: honeycomb hexagons ── */
+  .honeycomb{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .hex{
+    width:96px; height:110px; clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background:linear-gradient(155deg,var(--card),var(--card-soft)); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:1.8rem;
+    transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  .hex:hover{transform:translateY(-6px) scale(1.05);}
+  .hex:nth-child(2){margin-top:-24px;}
+
+  /* ── CONTACT ── */
+  .contact-card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:1.6rem;}
+  .contact-row{display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--line-soft);}
+  .contact-row:last-child{border-bottom:none;}
+  .contact-row .ico{width:22px; flex-shrink:0; color:var(--ember);}
+  .contact-row div strong{display:block; font-size:0.78rem; color:var(--faint); font-weight:500; margin-bottom:2px;}
+
+  /* ── FAQ: chat bubbles ── */
+  .chat{display:flex; flex-direction:column; gap:12px;}
+  .bubble{max-width:82%; padding:12px 16px; border-radius:16px; font-size:0.92rem; cursor:pointer;}
+  .bubble.q{align-self:flex-start; background:var(--card); border:1px solid var(--line); border-bottom-left-radius:4px; font-weight:500;}
+  .bubble.a{
+    align-self:flex-end; background:linear-gradient(135deg,var(--ember-tint),var(--card)); border:1px solid var(--ember-soft);
+    border-bottom-right-radius:4px; color:var(--dim); display:none;
+  }
+  .bubble.a.open{display:block; animation:pop 0.25s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes pop{from{opacity:0; transform:scale(0.92) translateY(4px);} to{opacity:1; transform:none;}}
+
+  .demo-banner{background:var(--card); border:1px solid var(--ember-soft); border-radius:18px; padding:1.4rem; text-align:center;}
+  .demo-banner strong{color:var(--ember);}
+  .demo-banner p{color:var(--faint); font-size:0.9rem; margin-top:6px;}
+
+  footer{text-align:center; padding:30px 0; color:var(--faint); font-size:0.85rem; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="flame">🔥</span> Кафе</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <span class="eyebrow">Домашняя кухня · доставка 40–60 мин</span>
+    <h1>Готовим,<br><em>как дома</em></h1>
+    <p>Супы, вторые блюда и выпечка — привезём тёплыми, будто вы сами только сняли с плиты.</p>
+    <div class="cta-row">
+      <a href="#" class="btn btn-ember">Заказать</a>
+      <a href="#menu" class="btn btn-outline">Смотреть меню</a>
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="section-head"><div><span class="kicker">Меню</span><h2>Что готовим</h2></div></div>
+
+    <div class="menu-group">
+      <span class="stamp">Супы</span>
+      <div class="ticket"><div class="info"><strong>Борщ</strong><span>со сметаной и зеленью</span></div><div class="price">1 200 тг</div></div>
+      <div class="ticket"><div class="info"><strong>Лагман</strong><span>острый, с говядиной</span></div><div class="price">1 500 тг</div></div>
+    </div>
+
+    <div class="menu-group">
+      <span class="stamp">Основные блюда</span>
+      <div class="ticket"><div class="info"><strong>Плов</strong><span>с бараниной</span></div><div class="price">1 800 тг</div></div>
+      <div class="ticket"><div class="info"><strong>Куриные котлеты</strong><span>с картофельным пюре</span></div><div class="price">1 600 тг</div></div>
+    </div>
+
+    <div class="menu-group">
+      <span class="stamp">Выпечка</span>
+      <div class="ticket"><div class="info"><strong>Самса</strong><span>с мясом, 1 шт</span></div><div class="price">400 тг</div></div>
+      <div class="ticket"><div class="info"><strong>Баурсаки</strong><span>порция 10 шт</span></div><div class="price">900 тг</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><div><span class="kicker">Доставка</span><h2>Условия</h2></div></div>
+    <div class="receipt">
+      <div class="receipt-row"><span>Время доставки</span><span>40–60 мин</span></div>
+      <div class="receipt-row"><span>Мин. заказ</span><span>3 000 тг</span></div>
+      <div class="receipt-row"><span>Бесплатно от</span><span>5 000 тг</span></div>
+      <div class="receipt-row"><span>Зона</span><span>По городу</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><div><span class="kicker">Кухня</span><h2>Как мы готовим</h2></div></div>
+    <div class="honeycomb"><div class="hex">🍲</div><div class="hex">🥟</div><div class="hex">🍞</div></div>
+  </section>
+
+  <section>
+    <div class="section-head"><div><span class="kicker">Контакты</span><h2>Связаться</h2></div></div>
+    <div class="contact-card">
+      <div class="contact-row"><span class="ico">📍</span><div><strong>Адрес</strong>уточняется под ваш город</div></div>
+      <div class="contact-row"><span class="ico">🕙</span><div><strong>Часы работы</strong>Ежедневно 10:00 – 21:00</div></div>
+      <div class="contact-row"><span class="ico">📞</span><div><strong>Телефон</strong>уточняется</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><div><span class="kicker">Вопросы</span><h2>Часто спрашивают</h2></div></div>
+    <div class="chat" id="faqChat">
+      <div class="bubble q" data-a="a1">Как оплатить заказ?</div>
+      <div class="bubble a" id="a1">Наличными курьеру или переводом на карту — как вам удобно.</div>
+      <div class="bubble q" data-a="a2">Можно ли заказать на завтра?</div>
+      <div class="bubble a" id="a2">Да, напишите нам заранее — согласуем время.</div>
+      <div class="bubble q" data-a="a3">Что если блюда нет в наличии?</div>
+      <div class="bubble a" id="a3">Курьер предупредит и предложит замену перед отправкой.</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="demo-banner">
+      <strong>Это демо-сайт</strong> — пример работы.
+      <p>Хотите такой же для своего бизнеса? Напишите — соберём под ваш бренд и тематику.</p>
+    </div>
+  </section>
+
+  <footer>Кафе — демо-версия сайта</footer>
+</div>
+
+<script>
+document.querySelectorAll('.bubble.q').forEach(q => {
+  q.addEventListener('click', () => {
+    document.getElementById(q.getAttribute('data-a')).classList.toggle('open');
+  });
+});
+</script>
+
+</body>
+</html>
